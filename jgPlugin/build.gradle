@@ -1,0 +1,71 @@
+plugins {
+    // 使用maven-publish插件
+    id 'maven-publish'
+    // 使用java库，用于开发插件
+    id 'java-library'
+    id 'java-gradle-plugin'
+    id 'groovy'
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+dependencies {
+    implementation gradleApi()
+    implementation localGroovy()
+// OkHttp(版本可自定, 要求OkHttp4以上版本)
+//    implementation 'com.squareup.okhttp3:okhttp:4.9.1'
+//    implementation "com.android.tools.build:gradle:4.1.2" //安卓插件
+}
+
+group='cn.devin.plugin' //组名
+version='1.0.0' //版本号
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            artifactId = 'cn.devin.plugin.jiagu'
+            from components.java
+        }
+    }
+
+    repositories {
+        maven {
+            url = uri('../jiagu')
+        }
+    }
+}
+
+gradlePlugin {
+    plugins {
+        // 插件名，每一个插件都可以有
+        jiaguPlugin {
+            id = 'cn.devin.plugin.jiagu'
+            // 插件的具体实现类
+            implementationClass = 'cn.devin.jiaguplugin.JiaguPlugin'
+        }
+        testPlugin {
+            id = 'cn.devin.plugin.test'
+            // 插件的具体实现类
+            implementationClass = 'cn.devin.jiaguplugin.TestPlugin'
+        }
+    }
+}
+
+//指定源码/资源路径
+sourceSets {
+    main {
+        java {
+//            srcDir 'src/main/java'
+            srcDir 'src/main/kotlin'
+        }
+        groovy {
+            srcDir 'src/main/groovy'
+        }
+        resources {
+            srcDir 'src/main/resources'
+        }
+    }
+}
